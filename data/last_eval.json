@@ -1,0 +1,333 @@
+[
+ {
+  "id": "SC1",
+  "event": "Port strike at Shanghai disrupts lithium cells shipments from China for 21 days",
+  "expected": "S03",
+  "llm_top": "S03",
+  "rules_top": "S02",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S03",
+    "label": "Reorder from TexasVolt (USA)",
+    "total_cost": 1260000,
+    "delay_days": 5.2,
+    "stockout_days": 0,
+    "reason": "S03 has the lowest stockout_days (0) which eliminates lost\u2011sale costs, even though its total_cost is $1,260,000 and delay_days are 5.2. Zero stockout outweighs the higher expense."
+   },
+   {
+    "rank": 2,
+    "id": "S02",
+    "label": "Reorder from SeoulPower (South Korea)",
+    "total_cost": 939750,
+    "delay_days": 12.2,
+    "stockout_days": 0.2,
+    "reason": "S02 incurs only 0.2 stockout_days and a total_cost of $939,750 with delay_days of 12.2. The near\u2011zero stockout and the cheapest overall cost place it second."
+   },
+   {
+    "rank": 3,
+    "id": "S04",
+    "label": "Reorder from ChennaiCell (India)",
+    "total_cost": 1078800,
+    "delay_days": 14.6,
+    "stockout_days": 2.6,
+    "reason": "S04 results in 2.6 stockout_days and a total_cost of $1,078,800 with delay_days of 14.6. Its stockout impact is higher than S02 and S03, making it less preferable."
+   },
+   {
+    "rank": 4,
+    "id": "WAIT",
+    "label": "WAIT out disruption (ShenzhenCell Co)",
+    "total_cost": 1126400,
+    "delay_days": 24.4,
+    "stockout_days": 12.4,
+    "reason": "WAIT suffers the highest stockout_days (12.4) and a total_cost of $1,126,400 with a long delay of 24.4 days, making it the worst option."
+   }
+  ],
+  "secs": 115.1
+ },
+ {
+  "id": "SC2",
+  "event": "Typhoon closes Kaohsiung in Taiwan; microcontrollers delayed for 14 days",
+  "expected": "S06",
+  "llm_top": "S06",
+  "rules_top": "S06",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S06",
+    "label": "Reorder from DresdenSemi (Germany)",
+    "total_cost": 2640000,
+    "delay_days": 6.2,
+    "stockout_days": 0,
+    "reason": "S06 has a total_cost of 2,640,000, stockout_days of 0, and delay_days of 6.2. Zero stockout days eliminates lost\u2011sale penalties, which outweighs its higher cost, and its short delay makes it the best option."
+   },
+   {
+    "rank": 2,
+    "id": "S07",
+    "label": "Reorder from PenangMicro (Malaysia)",
+    "total_cost": 2463000,
+    "delay_days": 13.5,
+    "stockout_days": 3.5,
+    "reason": "S07 incurs a total_cost of 2,463,000, stockout_days of 3.5, and delay_days of 13.5. Although its cost is higher than WAIT, the stockout days are substantially lower, reducing lost\u2011sale impact, and its delay is shorter, placing it ahead of WAIT."
+   },
+   {
+    "rank": 3,
+    "id": "WAIT",
+    "label": "WAIT out disruption (TaipeiChip)",
+    "total_cost": 2307500,
+    "delay_days": 17.2,
+    "stockout_days": 7.2,
+    "reason": "WAIT costs 2,307,500, but has stockout_days of 7.2 and delay_days of 17.2. The lowest monetary cost is offset by the highest stockout penalty and longest delay, making it the worst choice."
+   }
+  ],
+  "secs": 6.8
+ },
+ {
+  "id": "SC3",
+  "event": "Mundra port congestion in India halts cotton fabric exports for 10 days",
+  "expected": "WAIT",
+  "llm_top": "WAIT",
+  "rules_top": "WAIT",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "WAIT",
+    "label": "WAIT out disruption (GujaratCotton)",
+    "total_cost": 1260000,
+    "delay_days": 13.5,
+    "stockout_days": 0,
+    "reason": "WAIT has a total_cost of $1,260,000 and delay_days of 13.5 with stockout_days\u202f=\u202f0. It avoids any stockout loss while being the cheapest option, making it the best overall despite a moderate delay."
+   },
+   {
+    "rank": 2,
+    "id": "S10",
+    "label": "Reorder from IstanbulWeave (Turkey)",
+    "total_cost": 1650000,
+    "delay_days": 7.2,
+    "stockout_days": 0,
+    "reason": "S10 incurs a total_cost of $1,650,000 and delay_days of 7.2 with stockout_days\u202f=\u202f0. Although it is the fastest, its cost is significantly higher than WAIT, so it ranks second."
+   },
+   {
+    "rank": 3,
+    "id": "S09",
+    "label": "Reorder from DhakaTextiles (Bangladesh)",
+    "total_cost": 1380250,
+    "delay_days": 20.8,
+    "stockout_days": 5.8,
+    "reason": "S09 has a total_cost of $1,380,250, delay_days of 20.8 and stockout_days of 5.8. The combination of higher cost, longest delay, and non\u2011zero stockout days makes it the worst choice."
+   }
+  ],
+  "secs": 139.6
+ },
+ {
+  "id": "SC4",
+  "event": "Kolkata port flood in India stops steel coil shipments for 25 days",
+  "expected": "S11",
+  "llm_top": "S11",
+  "rules_top": "S11",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S11",
+    "label": "Reorder from RotterdamSteel (Netherlands)",
+    "total_cost": 9990000,
+    "delay_days": 9.2,
+    "stockout_days": 0,
+    "reason": "S11 has a total_cost of 9,990,000, delay_days of 9.2 and stockout_days of 0. Zero stockout days eliminates the very costly lost\u2011sale impact, and it also offers the shortest lead time, so despite a slightly higher cost than S12 it ranks best."
+   },
+   {
+    "rank": 2,
+    "id": "S12",
+    "label": "Reorder from PohangSteel (South Korea)",
+    "total_cost": 9075200,
+    "delay_days": 16.3,
+    "stockout_days": 3.8,
+    "reason": "S12 costs 9,075,200 total, with delay_days of 16.3 and stockout_days of 3.8. Its total cost is lower than S11, but the 3.8 stockout days generate significant lost\u2011sale expense and the delay is longer, placing it second."
+   },
+   {
+    "rank": 3,
+    "id": "WAIT",
+    "label": "WAIT out disruption (JamshedpurSteel)",
+    "total_cost": 12716000,
+    "delay_days": 28.5,
+    "stockout_days": 16.0,
+    "reason": "WAIT incurs a total_cost of 12,716,000, delay_days of 28.5 and stockout_days of 16.0. It is the most expensive, has the longest delay, and creates the highest number of stockout days, making it the worst option."
+   }
+  ],
+  "secs": 220.9
+ },
+ {
+  "id": "SC5",
+  "event": "Labour strike at Shanghai port in China hits lithium cells for 40 days",
+  "expected": "S03",
+  "llm_top": "S03",
+  "rules_top": "S02",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S03",
+    "label": "Reorder from TexasVolt (USA)",
+    "total_cost": 1260000,
+    "delay_days": 5.2,
+    "stockout_days": 0,
+    "reason": "S03 has a delay_days of 5.2, total_cost of 1260000, and stockout_days of 0. This option eliminates stockouts entirely, which outweighs its higher cost compared to S02; zero stockout days avoids the massive stockout cost, making it the best choice."
+   },
+   {
+    "rank": 2,
+    "id": "S02",
+    "label": "Reorder from SeoulPower (South Korea)",
+    "total_cost": 939750,
+    "delay_days": 12.2,
+    "stockout_days": 0.2,
+    "reason": "S02 shows delay_days of 12.2, total_cost of 939750, and stockout_days of 0.2. It has the lowest total cost of all options and only a negligible 0.2 days of stockout, placing it second after S03."
+   },
+   {
+    "rank": 3,
+    "id": "S04",
+    "label": "Reorder from ChennaiCell (India)",
+    "total_cost": 1078800,
+    "delay_days": 14.6,
+    "stockout_days": 2.6,
+    "reason": "S04 carries delay_days of 14.6, total_cost of 1078800, and stockout_days of 2.6. Its stockout days and total cost are higher than S02, making it less favorable."
+   },
+   {
+    "rank": 4,
+    "id": "WAIT",
+    "label": "WAIT out disruption (ShenzhenCell Co)",
+    "total_cost": 1810400,
+    "delay_days": 43.4,
+    "stockout_days": 31.4,
+    "reason": "WAIT incurs delay_days of 43.4, total_cost of 1810400, and stockout_days of 31.4. The very long delay and massive stockout period drive both cost and lost sales, ranking it as the worst option."
+   }
+  ],
+  "secs": 38.2
+ },
+ {
+  "id": "SC6",
+  "event": "Kaohsiung blockade in Taiwan, microcontrollers shortage for 45 days",
+  "expected": "S06",
+  "llm_top": "S06",
+  "rules_top": "S06",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S06",
+    "label": "Reorder from DresdenSemi (Germany)",
+    "total_cost": 2640000,
+    "delay_days": 6.2,
+    "stockout_days": 0,
+    "reason": "S06 has the lowest stockout_days (0) and a very short delay_days (6.2) while its total_cost ($2.64\u202fM) is only slightly higher than the cheapest option, making it the best trade\u2011off."
+   },
+   {
+    "rank": 2,
+    "id": "S07",
+    "label": "Reorder from PenangMicro (Malaysia)",
+    "total_cost": 2463000,
+    "delay_days": 13.5,
+    "stockout_days": 3.5,
+    "reason": "S07 is cheaper overall ($2.463\u202fM) but incurs 3.5 stockout_days and a longer delay_days (13.5). The higher stockout risk and delay place it below S06 despite the lower cost."
+   },
+   {
+    "rank": 3,
+    "id": "WAIT",
+    "label": "WAIT out disruption (TaipeiChip)",
+    "total_cost": 4477500,
+    "delay_days": 48.2,
+    "stockout_days": 38.2,
+    "reason": "WAIT has the highest total_cost ($4.477\u202fM), the longest stockout_days (38.2) and delay_days (48.2), making it the worst choice when stockouts are very costly."
+   }
+  ],
+  "secs": 34.3
+ },
+ {
+  "id": "SC7",
+  "event": "Customs shutdown at Mundra in India blocks cotton fabric for 30 days",
+  "expected": "S10",
+  "llm_top": "S10",
+  "rules_top": "S10",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "S10",
+    "label": "Reorder from IstanbulWeave (Turkey)",
+    "total_cost": 1650000,
+    "delay_days": 7.2,
+    "stockout_days": 0,
+    "reason": "S10 has the shortest delay (7.2\u202fdays) and zero stockout days, and although its total cost (1,650,000) is higher than S09, avoiding any stockout days is most valuable given stockouts are very costly."
+   },
+   {
+    "rank": 2,
+    "id": "S09",
+    "label": "Reorder from DhakaTextiles (Bangladesh)",
+    "total_cost": 1380250,
+    "delay_days": 20.8,
+    "stockout_days": 5.8,
+    "reason": "S09\u2019s delay (20.8\u202fdays) and total cost (1,380,250) are lower than WAIT, and its stockout days (5.8) are far fewer than WAIT, making it the second\u2011best option."
+   },
+   {
+    "rank": 3,
+    "id": "WAIT",
+    "label": "WAIT out disruption (GujaratCotton)",
+    "total_cost": 2185000,
+    "delay_days": 33.5,
+    "stockout_days": 18.5,
+    "reason": "WAIT incurs the longest delay (33.5\u202fdays), the highest total cost (2,185,000) and the most stockout days (18.5), so it ranks worst."
+   }
+  ],
+  "secs": 53.6
+ },
+ {
+  "id": "SC8",
+  "event": "Minor 5 day delay at Shanghai port in China affecting lithium cells",
+  "expected": "WAIT",
+  "llm_top": "WAIT",
+  "rules_top": "WAIT",
+  "source": "llm",
+  "plan": [
+   {
+    "rank": 1,
+    "id": "WAIT",
+    "label": "WAIT out disruption (ShenzhenCell Co)",
+    "total_cost": 680000,
+    "delay_days": 8.4,
+    "stockout_days": 0,
+    "reason": "WAIT has 0 stockout days, the lowest total cost ($680000) and a moderate delay (8.4 days), making it the best overall despite not being the fastest."
+   },
+   {
+    "rank": 2,
+    "id": "S03",
+    "label": "Reorder from TexasVolt (USA)",
+    "total_cost": 1260000,
+    "delay_days": 5.2,
+    "stockout_days": 0,
+    "reason": "S03 also has 0 stockout days but a much higher total cost ($1260000); although it has the shortest delay (5.2 days), the cost penalty places it second."
+   },
+   {
+    "rank": 3,
+    "id": "S02",
+    "label": "Reorder from SeoulPower (South Korea)",
+    "total_cost": 939750,
+    "delay_days": 12.2,
+    "stockout_days": 0.2,
+    "reason": "S02 incurs 0.2 stockout days, adding risk, with a total cost of $939750 and a delay of 12.2 days, ranking it below the zero\u2011stockout options."
+   },
+   {
+    "rank": 4,
+    "id": "S04",
+    "label": "Reorder from ChennaiCell (India)",
+    "total_cost": 1078800,
+    "delay_days": 14.6,
+    "stockout_days": 2.6,
+    "reason": "S04 is the worst: it has the highest stockout days (2.6), a high total cost ($1078800) and the longest delay (14.6 days)."
+   }
+  ],
+  "secs": 35.5
+ }
+]

@@ -1,0 +1,26 @@
+{
+ "lithium cells": {
+  "on_hand": 24000,
+  "daily_demand": 2000,
+  "primary_supplier": "S01",
+  "unit_margin": 8.0
+ },
+ "microcontrollers": {
+  "on_hand": 200000,
+  "daily_demand": 20000,
+  "primary_supplier": "S05",
+  "unit_margin": 1.5
+ },
+ "cotton fabric": {
+  "on_hand": 150000,
+  "daily_demand": 10000,
+  "primary_supplier": "S08",
+  "unit_margin": 2.0
+ },
+ "steel coil": {
+  "on_hand": 5000,
+  "daily_demand": 400,
+  "primary_supplier": "S13",
+  "unit_margin": 150
+ }
+}

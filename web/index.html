@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disruption Response Desk</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--ink:#0f172a;--indigo:#4f46e5;--violet:#7c3aed;--blue:#2563eb;--cyan:#06b6d4;--green:#10b981;--red:#ef4444;--amber:#f59e0b;--pink:#ec4899;
+--bg:#f4f6ff;--card:#fff;--line:#e6e9f5;--muted:#6b7692;--pale:#eef2ff;--navy:#1e1b4b}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:var(--ink);display:flex;min-height:100vh;
+background:radial-gradient(900px 500px at 85% -10%,#e0e7ff 0,transparent 60%),radial-gradient(700px 500px at 10% 110%,#cffafe 0,transparent 55%),var(--bg);background-attachment:fixed}
+aside{width:260px;background:linear-gradient(170deg,#312e81 0%,#1e1b4b 55%,#0f172a 100%);color:#fff;padding:24px 16px;position:fixed;top:0;bottom:0;display:flex;flex-direction:column;gap:6px;box-shadow:4px 0 30px rgba(49,46,129,.25);overflow:hidden}
+aside::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.55),transparent 70%);top:-90px;right:-110px;pointer-events:none}
+.brand{font-size:1.1rem;font-weight:800;line-height:1.25;margin-bottom:14px;display:flex;gap:11px;align-items:center;position:relative}
+.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 6px 18px rgba(6,182,212,.4);flex:none;animation:float 4s ease-in-out infinite}
+.brand small{display:block;font-weight:400;color:#a5b4fc;font-size:.74rem;margin-top:3px}
+@keyframes float{50%{transform:translateY(-4px) rotate(-4deg)}}
+nav button{width:100%;text-align:left;background:none;border:0;color:#c7d2fe;padding:12px 14px;border-radius:12px;font-size:.96rem;cursor:pointer;display:flex;gap:12px;align-items:center;transition:all .2s;position:relative}
+nav button .ic{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
+nav button:hover{background:rgba(255,255,255,.08);transform:translateX(3px)}
+nav button.active{background:linear-gradient(90deg,#4f46e5,#7c3aed);color:#fff;font-weight:600;box-shadow:0 8px 20px rgba(79,70,229,.45)}
+nav button.active .ic{background:rgba(255,255,255,.22)}
+.side-box{margin-top:auto;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;font-size:.82rem;color:#c7d2fe;backdrop-filter:blur(6px)}
+.side-box input[type=range]{width:100%;accent-color:#22d3ee}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;box-shadow:0 0 8px currentColor}
+main{margin-left:260px;padding:26px 34px 70px;flex:1;max-width:1320px}
+h1{margin:0 0 4px;font-size:1.7rem;color:var(--navy)}.sub{color:var(--muted);margin:0 0 20px}
+h2{font-size:1.06rem;margin:0 0 12px;color:var(--navy);display:flex;align-items:center;gap:8px}
+section{display:none}section.active{display:block;animation:fadeUp .45s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:30px 34px;margin-bottom:20px;color:#fff;background:linear-gradient(120deg,#4f46e5,#7c3aed 50%,#06b6d4);box-shadow:0 18px 40px rgba(79,70,229,.3)}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.12);pointer-events:none}
+.hero::before{width:260px;height:260px;right:-60px;top:-110px;animation:drift 9s ease-in-out infinite}.hero::after{width:150px;height:150px;right:200px;bottom:-80px;animation:drift 7s ease-in-out infinite reverse}
+@keyframes drift{50%{transform:translate(-24px,14px) scale(1.08)}}
+.hero h1{color:#fff;font-size:2rem;margin:0 0 6px;position:relative}.hero p{margin:0;color:#e0e7ff;max-width:640px;position:relative;line-height:1.5}
+.hero .chips{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;position:relative}
+.hero .chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:8px 16px;backdrop-filter:blur(4px)}
+.hero .chip b{font-size:1.3rem;display:block}.hero .chip span{font-size:.75rem;color:#e0e7ff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px;box-shadow:0 4px 18px rgba(79,70,229,.06);margin-bottom:18px;transition:box-shadow .25s,transform .25s}
+.card:hover{box-shadow:0 10px 30px rgba(79,70,229,.12)}
+.grid{display:grid;gap:18px}.g2{grid-template-columns:1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:1000px){aside{position:static;width:100%}body{flex-direction:column}main{margin:0;padding:18px}.g2,.g3,.g4{grid-template-columns:1fr}}
+label{font-size:.78rem;font-weight:700;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+select,textarea,input[type=text]{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fbfcff;transition:border .2s,box-shadow .2s}
+select:focus,textarea:focus{outline:0;border-color:var(--indigo);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+textarea{min-height:76px;resize:vertical}
+.btn{background:linear-gradient(120deg,#4f46e5,#7c3aed);color:#fff;border:0;border-radius:12px;padding:12px 24px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(79,70,229,.35);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(79,70,229,.45)}.btn:active{transform:none}
+.btn:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed;transform:none}
+.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid #c7d2fe;box-shadow:none}.btn.ghost:hover{background:var(--pale)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.kpi{position:relative;overflow:hidden}.kpi .ico{position:absolute;right:14px;top:12px;font-size:1.7rem;opacity:.9}
+.kpi .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}.kpi .v{font-size:1.65rem;font-weight:800;margin-top:4px;background:linear-gradient(120deg,#4f46e5,#06b6d4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi .s{font-size:.8rem;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(120deg,#eef2ff,#ecfeff);color:#3730a3;border:1px solid #dbe3ff;border-radius:999px;padding:5px 14px;font-size:.82rem;font-weight:600;margin:0 8px 8px 0}
+.pipe{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.node{flex:1;min-width:150px;background:#f8faff;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;font-size:.82rem;color:var(--muted);transition:all .3s}
+.node b{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.92rem;margin-bottom:2px}.node .e{font-size:1.15rem}
+.arrow{color:#a5b4fc;font-size:1.2rem;font-weight:700}
+.node.run{border-color:var(--indigo);background:#eef2ff;color:#3730a3;animation:pulse 1s infinite}
+.node.done{border-color:#6ee7b7;background:linear-gradient(135deg,#ecfdf5,#f0fdfa);color:#047857}
+.node.done b::after{content:"✓";margin-left:auto;background:var(--green);color:#fff;border-radius:50%;width:20px;height:20px;font-size:.72rem;display:flex;align-items:center;justify-content:center}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(79,70,229,.16)}}
+.rec{position:relative;overflow:hidden;background:linear-gradient(120deg,#059669,#10b981 55%,#06b6d4);color:#fff;border-radius:22px;padding:24px 28px;margin-bottom:22px;box-shadow:0 18px 38px rgba(16,185,129,.3);animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+.rec::after{content:"🏆";position:absolute;right:26px;top:14px;font-size:3.6rem;opacity:.25;transform:rotate(12deg)}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.rec .tagline{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85;font-weight:700}
+.rec h3{margin:4px 0 14px;font-size:1.55rem}
+.rec .big{display:flex;gap:16px;flex-wrap:wrap}
+.rec .big div{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:16px;padding:10px 20px;min-width:140px;backdrop-filter:blur(4px)}
+.rec .big div span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;opacity:.9}.rec .big div b{font-size:1.6rem}
+.opt{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:18px 22px;margin-bottom:14px;box-shadow:0 4px 14px rgba(79,70,229,.05);transition:transform .2s,box-shadow .2s;opacity:0;animation:fadeUp .5s ease forwards}
+.opt:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(79,70,229,.14)}
+.opt.top{border:2px solid #34d399;background:linear-gradient(180deg,#f0fdf9,#fff 45%)}
+.opt .head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.badge{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:800;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 14px rgba(99,102,241,.35)}
+.opt.top .badge{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 6px 14px rgba(16,185,129,.4)}
+.opt .name{font-weight:700;font-size:1.08rem}.opt .em{font-size:1.5rem}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.tg{border-radius:999px;padding:3px 11px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
+.tg.g{background:#d1fae5;color:#047857}.tg.b{background:#dbeafe;color:#1d4ed8}.tg.a{background:#fef3c7;color:#b45309}.tg.r{background:#fee2e2;color:#b91c1c}.tg.p{background:#ede9fe;color:#6d28d9}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 10px}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:#f8faff;border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.stat span{display:block;font-size:.68rem;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;font-weight:700}.stat b{font-size:1.25rem}
+.stat .mini{height:5px;background:#e5e9f7;border-radius:99px;overflow:hidden;margin-top:6px}.stat .mini i{display:block;height:100%;border-radius:99px;transition:width 1s ease}
+.bad{color:var(--red)}.good{color:#059669}
+.why{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(120deg,#faf5ff,#eff6ff);border:1px solid #e9d5ff;border-radius:14px;padding:12px 16px;color:#334155;line-height:1.55;font-size:.94rem}
+.why .bulb{font-size:1.25rem;flex:none}.why b{color:#4338ca}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:linear-gradient(120deg,#312e81,#4f46e5);color:#fff;text-align:left;padding:10px 12px;font-weight:600}th:first-child{border-radius:12px 0 0 0}th:last-child{border-radius:0 12px 0 0}
+td{padding:10px 12px;border-bottom:1px solid var(--line)}tr:hover td{background:#f5f7ff}
+.tag{display:inline-block;border-radius:999px;padding:3px 11px;font-size:.78rem;font-weight:700}.tag.ok{background:#d1fae5;color:#047857}.tag.no{background:#fee2e2;color:#b91c1c}.tag.er{background:#fef3c7;color:#b45309}
+.chartbox{position:relative;height:300px}
+.strip{display:flex;border-radius:12px;overflow:hidden;height:38px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}.strip div{flex:1;transition:flex .3s}.strip div:hover{flex:2}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;margin-top:10px;color:#334155}.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.insight{padding:12px 16px;background:linear-gradient(120deg,#f8faff,#f5f3ff);border-radius:14px;border:1px solid var(--line);margin-bottom:9px;font-size:.94rem;line-height:1.55;display:flex;gap:12px;animation:fadeUp .5s ease both}
+.insight .ii{font-size:1.2rem}
+.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:14px;padding:12px 16px;margin-bottom:14px}
+.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:.92rem}
+.step{display:inline-block;background:linear-gradient(120deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;padding:6px 13px;margin:4px 6px 4px 0;font-size:.82rem;font-weight:600}.step.w{background:linear-gradient(120deg,#10b981,#06b6d4)}
+details{border:1px solid var(--line);border-radius:14px;padding:11px 16px;margin-bottom:9px;background:#fff}summary{cursor:pointer;font-weight:600}
+pre{background:#1e1b4b;color:#e0e7ff;border-radius:12px;padding:14px;overflow:auto;font-size:.8rem;margin:8px 0}
+.empty{color:var(--muted);text-align:center;padding:46px 10px;font-size:1.05rem}.empty .big{font-size:2.6rem;display:block;margin-bottom:6px}
+.progress{height:12px;background:#e5e9f7;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#4f46e5,#06b6d4);width:0;transition:width .4s;border-radius:99px}
+.noanim *{animation:none!important;transition:none!important}.noanim .opt,.noanim section.active{opacity:1!important}
+.friendly{background:linear-gradient(120deg,#fffbeb,#fff7ed);border:1.5px solid #fcd34d;border-radius:18px;padding:18px 22px;margin-bottom:16px;color:#78350f}
+.friendly h3{margin:0 0 6px;font-size:1.1rem;color:#92400e}.friendly p{margin:0 0 10px;line-height:1.55}
+.ex{display:inline-block;background:#fff;border:1px solid #fcd34d;border-radius:999px;padding:5px 13px;font-size:.82rem;margin:3px 6px 3px 0;cursor:pointer;color:#92400e;font-weight:600}.ex:hover{background:#fef3c7}
+.warnbox{background:#fffbeb;border:1px solid #fde68a;border-left:5px solid #f59e0b;color:#92400e;border-radius:12px;padding:10px 16px;margin-bottom:10px;font-size:.92rem}
+.counter{font-size:.75rem;color:var(--muted);text-align:right;margin-top:4px}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><div class="logo">🚢</div><div>Disruption<br>Response Desk<small>Multi-agent supply chain planner</small></div></div>
+  <nav>
+    <button data-tab="desk" class="active"><span class="ic">▶</span>Run desk</button>
+    <button data-tab="analysis"><span class="ic">📊</span>Analysis</button>
+    <button data-tab="eval"><span class="ic">✅</span>Evaluation</button>
+    <button data-tab="data"><span class="ic">📦</span>Catalogue &amp; stock</button>
+    <button data-tab="bb"><span class="ic">🧠</span>Blackboard</button>
+  </nav>
+  <div class="side-box">
+    <div id="keystat"><span class="dot" style="background:#94a3b8"></span>checking…</div>
+    <div id="modelstat" style="margin-top:4px"></div>
+    <div style="margin-top:12px">Cost weight: <b id="wlabel">0.60</b></div>
+    <input type="range" id="w" min="0" max="1" step="0.05" value="0.6">
+    <div style="font-size:.75rem;margin-top:4px;color:#9db4d8">Used by the Analysis tab. 0 = only delay, 1 = only cost.</div>
+  </div>
+</aside>
+
+<main>
+<!-- ======================= RUN ======================= -->
+<section id="desk" class="active">
+  <div class="hero"><h1>Turn a supply-chain shock into a plan ⚡</h1>
+    <p>Describe a disruption. Five AI agents read the stock, search the supplier catalogue, price every option and let the Operations Manager rank them, with the reason for each.</p>
+    <div class="chips"><div class="chip"><b>5</b><span>specialised agents</span></div><div class="chip"><b>13</b><span>suppliers in the RAG catalogue</span></div><div class="chip"><b>8</b><span>evaluation scenarios</span></div></div></div>
+  <div class="card">
+    <div class="grid g2" style="grid-template-columns:1fr 2fr">
+      <div><label>Scenario</label><select id="scn"></select></div>
+      <div><label>Disruption event</label><textarea id="evt" maxlength="500" placeholder="e.g. Port strike at Shanghai port in China hits lithium cells for 21 days"></textarea><div class="counter" id="cnt">0 / 500</div></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="runBtn">▶ Run response desk</button>
+      <button class="btn ghost" id="replayBtn" title="Shows a real LLM run saved from your last evaluation. No internet needed.">Replay saved LLM run</button>
+      <button class="btn ghost" id="demoBtn" title="Uses the cost/delay tools only, no LLM. A backup if Groq is unreachable.">Demo mode (no LLM)</button>
+      <span id="runmeta" style="color:var(--muted);font-size:.88rem"></span>
+    </div>
+  </div>
+  <div class="card"><h2>🛰️ Agent pipeline</h2><div class="pipe" id="pipe"></div></div>
+  <div id="deskErr"></div>
+  <div id="deskOut"><div class="card empty"><span class="big">🚀</span>Pick a scenario and press Run to see the recommendation.</div></div>
+</section>
+
+<!-- ======================= ANALYSIS ======================= -->
+<section id="analysis">
+  <h1>Analysis</h1>
+  <p class="sub">Why the options rank the way they do, and how robust the recommendation is.</p>
+  <div id="anOut"><div class="card empty"><span class="big">🧭</span>Run a scenario first.</div></div>
+</section>
+
+<!-- ======================= EVALUATION ======================= -->
+<section id="eval">
+  <h1>Evaluation</h1>
+  <p class="sub">8 disruption scenarios with a known best option. How often does the top-ranked option match?</p>
+  <div class="card">
+    <div class="row"><button class="btn" id="evalBtn">▶ Run evaluation (8 scenarios)</button><span id="evalmeta" style="color:var(--muted);font-size:.88rem"></span></div>
+    <div class="progress" style="margin-top:12px;display:none" id="evalprog"><i></i></div>
+  </div>
+  <div id="evalErr"></div>
+  <div id="evalOut"></div>
+</section>
+
+<!-- ======================= DATA ======================= -->
+<section id="data">
+  <h1>Catalogue &amp; stock</h1>
+  <p class="sub">The synthetic data the agents work with.</p>
+  <div class="grid g2">
+    <div class="card"><h2>Lead time vs unit cost</h2><div class="chartbox"><canvas id="cLead"></canvas></div></div>
+    <div class="card"><h2>Days of stock cover by good</h2><div class="chartbox"><canvas id="cCover"></canvas></div></div>
+  </div>
+  <div class="card"><h2>Supplier catalogue (RAG source)</h2><div id="supTable" style="overflow:auto"></div></div>
+</section>
+
+<!-- ======================= BLACKBOARD ======================= -->
+<section id="bb">
+  <h1>Blackboard</h1>
+  <p class="sub">The shared disruption-state board every agent reads and writes.</p>
+  <div id="bbOut"><div class="card empty"><span class="big">🧭</span>Run a scenario first.</div></div>
+</section>
+</main>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const fmt = n => Math.round(n).toLocaleString("en-US");
+if (typeof Chart !== "undefined") { Chart.defaults.locale = "en-US"; if (new URLSearchParams(location.search).has("fast")) Chart.defaults.animation = false; }
+const AGENTS = [["EventInterpreter", "Event Interpreter", "Structures the event", "📰"], ["Inventory", "Inventory", "Reads stock (tool)", "📦"],
+  ["SupplierAlternatives", "Supplier Alternatives", "RAG over catalogue", "🔎"], ["CostDelay", "Cost-Delay", "Computes options (tool)", "🧮"],
+  ["OperationsManager", "Operations Manager", "Arbitrates and ranks", "🎯"]];
+const COLORS = ["#2563eb", "#16a34a", "#d97706", "#9333ea", "#0891b2", "#dc2626", "#64748b"];
+let DATA = null, R = null, charts = {}, NAME = {WAIT: "Wait it out"}, STATUS = {};
+
+function mkChart(id, cfg) { if (charts[id]) charts[id].destroy(); if (typeof Chart === "undefined") return; charts[id] = new Chart($("#" + id), cfg); }
+const esc = s => String(s ?? "").replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"}[c]));
+
+async function stream(url, body, onMsg) {
+  const res = await fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body || {})});
+  if (!res.ok) { const j = await res.json().catch(() => ({})); const er = new Error(j.error || res.statusText); er.kind = j.kind; throw er; }
+  const rd = res.body.getReader(), dec = new TextDecoder(); let buf = "";
+  for (;;) {
+    const {done, value} = await rd.read(); if (done) break;
+    buf += dec.decode(value, {stream: true}); let i;
+    while ((i = buf.indexOf("\n")) >= 0) { const l = buf.slice(0, i).trim(); buf = buf.slice(i + 1); if (l) onMsg(JSON.parse(l)); }
+  }
+}
+
+// ---------- nav ----------
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("active", x === b));
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === b.dataset.tab));
+  if (b.dataset.tab === "analysis" && R) renderAnalysis();
+  if (b.dataset.tab === "data") renderData();
+  if (b.dataset.tab === "eval" && EVALRES) renderEval(EVALRES, EVALSAVED);
+});
+$("#w").oninput = e => { $("#wlabel").textContent = (+e.target.value).toFixed(2); if (R && $("#analysis").classList.contains("active")) renderAnalysis(); };
+
+// ---------- init ----------
+async function init() {
+  STATUS = await (await fetch("/api/status")).json();
+  $("#keystat").innerHTML = `<span class="dot" style="background:${STATUS.has_key ? "#4ade80" : "#f87171"}"></span>${STATUS.has_key ? "Groq key found" : "No GROQ_API_KEY (demo only)"}`;
+  $("#modelstat").textContent = "Model: " + STATUS.model;
+  $("#runBtn").disabled = !STATUS.has_key; $("#evalBtn").disabled = !STATUS.has_key;
+  DATA = await (await fetch("/api/data")).json();
+  DATA.suppliers.forEach(s => NAME[s.id] = s.name);
+  const sel = $("#scn"); sel.innerHTML = `<option value="">Custom</option>` + DATA.scenarios.map(s => `<option value="${esc(s.event)}">${s.id}: ${esc(s.event)}</option>`).join("");
+  sel.onchange = () => { if (sel.value) { $("#evt").value = sel.value; $("#cnt").textContent = sel.value.length + " / 500"; } };
+  $("#evt").value = "Port strike at Shanghai port in China hits lithium cells for 21 days";
+  $("#evt").oninput = () => $("#cnt").textContent = $("#evt").value.length + " / 500"; $("#cnt").textContent = $("#evt").value.length + " / 500";
+  renderPipe({});
+  const ev = await (await fetch("/api/last-eval")).json(); if (ev.length) renderEval(ev, true);
+  const q = new URLSearchParams(location.search);
+  if (q.has("fast")) document.documentElement.classList.add("noanim");               // shortcuts: ?demo=1&tab=analysis
+  if (q.get("evt")) { $("#evt").value = q.get("evt"); $("#cnt").textContent = $("#evt").value.length + " / 500"; }
+  if (q.get("replay")) await replayRun(q.get("replay"));
+  if (q.get("demo")) await runDesk(true);
+  if (q.get("tab")) document.querySelector(`nav button[data-tab="${q.get("tab")}"]`)?.click();
+}
+function renderPipe(st) {
+  $("#pipe").innerHTML = AGENTS.map(([k, n, d, e], i) => `<div class="node ${st[k] || ""}"><b><span class="e">${e}</span>${i + 1}. ${n}</b>${d}</div>${i < AGENTS.length - 1 ? '<span class="arrow">›</span>' : ""}`).join("");
+}
+
+// ---------- run ----------
+async function runDesk(demo) {
+  $("#deskErr").innerHTML = ""; if (!$("#evt").value.trim()) { showProblem({kind: "input", message: "Please describe a disruption first."}); return; }
+  $("#runBtn").disabled = $("#demoBtn").disabled = true; $("#runmeta").textContent = "running…";
+  const st = {}; renderPipe(st);
+  try {
+    await stream("/api/run", {event: $("#evt").value, demo, fast: new URLSearchParams(location.search).has("fast")}, m => {
+      if (m.step) { st[m.step] = m.state === "start" ? "run" : "done"; renderPipe(st); }
+      if (m.info) $("#runmeta").textContent = m.info;
+      if (m.error) { const er = new Error(m.error); er.kind = m.kind; throw er; }
+      if (m.result) { R = m.result; $("#runmeta").textContent = `finished in ${m.secs}s${m.demo ? " (demo mode)" : ""}`; renderDesk(); renderBB(); if (STATUS) renderAnalysis(); }
+    });
+  } catch (e) { showProblem({kind: e.kind || "system", message: e.message}); $("#runmeta").textContent = ""; renderPipe({}); }
+  $("#runBtn").disabled = !STATUS.has_key; $("#demoBtn").disabled = false;
+}
+async function replayRun(id) {
+  $("#deskErr").innerHTML = "";
+  if (!id) { showProblem({kind: "input", message: "Pick one of the 8 scenarios from the Scenario list first, then press Replay."}); return; }
+  const r = await fetch("/api/replay?id=" + encodeURIComponent(id)), j = await r.json();
+  if (!r.ok) { showProblem({kind: j.kind || "system", message: j.error}); return; }
+  R = j.result; $("#evt").value = j.event; $("#cnt").textContent = j.event.length + " / 500";
+  renderPipe(Object.fromEntries(AGENTS.map(a => [a[0], "done"]))); $("#runmeta").textContent = "replaying a saved real LLM run";
+  renderDesk(); renderBB(); renderAnalysis();
+}
+$("#replayBtn").onclick = () => { const o = DATA.scenarios.find(x => x.event === $("#scn").value); replayRun(o ? o.id : ""); };
+$("#runBtn").onclick = () => runDesk(false); $("#demoBtn").onclick = () => runDesk(true);
+
+function cleanReason(t) {
+  let x = esc(t).replace(/total_cost/g, "total cost").replace(/stockout_days/g, "stockout days").replace(/delay_days/g, "delay").replace(/_/g, " ");
+  return x.replace(/(\d[\d,]*\.?\d*)(\s*days?)?/g, (m) => `<b>${m}</b>`);
+}
+function countUp(root) {
+  root.querySelectorAll("[data-count]").forEach(el => {
+    const to = +el.dataset.count, dec = +(el.dataset.dec || 0), suf = el.dataset.suf || "", t0 = performance.now();
+    if (document.documentElement.classList.contains("noanim")) { el.textContent = (dec ? to.toFixed(dec) : Math.round(to).toLocaleString("en-US")) + suf; return; }
+    (function tick(t) { const p = Math.min(1, (t - t0) / 900), v = to * (1 - Math.pow(1 - p, 3));
+      el.textContent = (dec ? v.toFixed(dec) : Math.round(v).toLocaleString("en-US")) + suf; if (p < 1) requestAnimationFrame(tick); })(t0);
+  });
+}
+function showProblem(p) {
+  if (p.kind === "input") {
+    const ex = ["Port strike at Shanghai port in China hits lithium cells for 21 days", "Typhoon closes Kaohsiung in Taiwan; microcontrollers delayed for 14 days",
+                "Customs shutdown at Mundra in India blocks cotton fabric for 30 days"];
+    $("#deskErr").innerHTML = `<div class="friendly"><h3>🙋 I can't plan that one</h3><p>${esc(p.message)}</p>
+      <p><b>Goods I know:</b> ${DATA ? DATA.goods.map(esc).join(", ") : ""}.</p><div>${ex.map(e => `<span class="ex" data-ex="${esc(e)}">${esc(e)}</span>`).join("")}</div></div>`;
+    document.querySelectorAll(".ex").forEach(x => x.onclick = () => { $("#evt").value = x.dataset.ex; $("#cnt").textContent = x.dataset.ex.length + " / 500"; });
+  } else {
+    $("#deskErr").innerHTML = `<div class="err"><b>Run failed.</b> ${esc(p.message)} <button class="btn ghost" style="padding:4px 12px;margin-left:8px" onclick="runDesk(true)">Try Demo mode</button></div>`;
+  }
+}
+function renderDesk() {
+  const ev = R.event, plan = R.ranked_plan, best = plan[0];
+  const maxC = Math.max(...plan.map(o => o.total_cost)), maxD = Math.max(...plan.map(o => o.delay_days)), maxQ = Math.max(...plan.map(o => o.qty));
+  const cheapest = plan.reduce((a, b) => a.total_cost <= b.total_cost ? a : b), fastest = plan.reduce((a, b) => a.delay_days <= b.delay_days ? a : b);
+  const icon = o => o.id === "WAIT" ? "⏳" : o === fastest ? "🚀" : o === cheapest ? "💰" : "🚚";
+  const tags = o => [o.rank === 1 ? '<span class="tg g">★ TOP PICK</span>' : "", o === fastest ? '<span class="tg b">Fastest</span>' : "",
+    o === cheapest ? '<span class="tg p">Lowest cost</span>' : "", o.stockout_days === 0 ? '<span class="tg g">No stockout</span>' : '<span class="tg r">Stockout risk</span>',
+    o.id === "WAIT" ? '<span class="tg a">Do nothing</span>' : ""].join("");
+  const meter = (v, mx, c) => `<div class="mini"><i style="width:${Math.max(4, v / mx * 100).toFixed(0)}%;background:${c}"></i></div>`;
+  $("#deskOut").innerHTML = `
+    <div>${[["📌", "Type", ev.type], ["🌍", "Region", ev.region], ["⚓", "Port", ev.port], ["📦", "Goods", ev.goods.join(", ")], ["⏱️", "Duration", ev.duration_days + " days"]]
+      .map(([i, k, v]) => `<span class="pill">${i} ${k}: ${esc(v)}</span>`).join("")}</div>
+    ${(R.warnings || []).map(w => `<div class="warnbox">⚠️ ${esc(w)}</div>`).join("")}
+    ${R.ranking_source === "fallback" ? `<div class="warn">The manager's LLM ranking was invalid, so the weighted-score fallback was used.</div>` : ""}
+    ${R.ranking_source === "replay" ? `<div class="warn">🔁 Replay of a real LLM run saved from your last evaluation (ranking and reasons written by the Operations Manager LLM).</div>` : ""}
+    ${R.ranking_source === "demo" ? `<div class="warn">Demo mode: ranked by the weighted score, no LLM involved.</div>` : ""}
+    <div class="rec"><div class="tagline">Recommended plan</div><h3>${esc(best.label)}</h3>
+      <div class="big"><div><span>Total cost</span><b data-count="${best.total_cost}">0</b></div><div><span>Delay</span><b data-count="${best.delay_days}" data-dec="1" data-suf=" days">0</b></div>
+      <div><span>Stockout</span><b>${best.stockout_days ? best.stockout_days + " days" : "None 🎉"}</b></div><div><span>Order quantity</span><b data-count="${best.qty}">0</b></div></div></div>
+    <h2>🏁 Ranked action options</h2>
+    ${plan.map((o, i) => `<div class="opt ${o.rank === 1 ? "top" : ""}" style="animation-delay:${i * 0.12}s">
+      <div class="head"><div class="badge">${o.rank}</div><span class="em">${icon(o)}</span><div class="name">${esc(o.label)}</div><div class="tags">${tags(o)}</div></div>
+      <div class="stats">
+        <div class="stat"><span>💵 Total cost</span><b>${fmt(o.total_cost)}</b>${meter(o.total_cost, maxC, "linear-gradient(90deg,#6366f1,#8b5cf6)")}</div>
+        <div class="stat"><span>⏱️ Delay</span><b>${o.delay_days} days</b>${meter(o.delay_days, maxD, "linear-gradient(90deg,#06b6d4,#3b82f6)")}</div>
+        <div class="stat"><span>📉 Stockout</span><b class="${o.stockout_days ? "bad" : "good"}">${o.stockout_days ? o.stockout_days + " days" : "None"}</b>${meter(o.stockout_days, Math.max(...plan.map(p => p.stockout_days)) || 1, o.stockout_days ? "linear-gradient(90deg,#f59e0b,#ef4444)" : "#10b981")}</div>
+        <div class="stat"><span>📦 Order qty</span><b>${fmt(o.qty)}</b>${meter(o.qty, maxQ, "linear-gradient(90deg,#10b981,#06b6d4)")}</div></div>
+      <div class="why"><span class="bulb">💡</span><div><b>Why this rank:</b> ${cleanReason(o.reason)}</div></div></div>`).join("")}`;
+  countUp($("#deskOut"));
+}
+
+// ---------- analysis ----------
+function rank(opts, w) {
+  const cm = Math.max(...opts.map(o => o.total_cost)) || 1, dm = Math.max(...opts.map(o => o.delay_days)) || 1;
+  return opts.map(o => ({...o, score: w * o.total_cost / cm + (1 - w) * o.delay_days / dm})).sort((a, b) => a.score - b.score);
+}
+function pareto(opts) {
+  return opts.filter(o => !opts.some(p => p.total_cost <= o.total_cost && p.delay_days <= o.delay_days && (p.total_cost < o.total_cost || p.delay_days < o.delay_days)))
+    .sort((a, b) => a.delay_days - b.delay_days);
+}
+function renderAnalysis() {
+  if (!R) return;
+  const opts = R.options, plan = R.ranked_plan, ev = R.event, cover = R.stock[ev.goods[0]].days_of_cover, w = +$("#w").value;
+  const nm = o => NAME[o.id] || o.id, label = o => `${o.id} · ${nm(o)}`;
+  const cheapest = opts.reduce((a, b) => a.total_cost <= b.total_cost ? a : b), fastest = opts.reduce((a, b) => a.delay_days <= b.delay_days ? a : b);
+  const wr = rank(opts, w), safe = opts.filter(o => o.stockout_days === 0);
+  const strip = Array.from({length: 21}, (_, i) => rank(opts, i / 20)[0].id);
+  const flips = strip.filter((x, i) => i && x !== strip[i - 1]).length;
+  const ids = [...new Set(plan.map(o => o.id))], col = Object.fromEntries(ids.map((id, i) => [id, COLORS[i % COLORS.length]]));
+  const ins = [];
+  ins.push(`Stock covers <b>${cover} days</b> and the disruption lasts <b>${ev.duration_days} days</b>${ev.duration_days > cover ? ", so waiting alone cannot avoid a stockout." : ", so waiting may be viable."}`);
+  ins.push(`<b>${safe.length}</b> of ${opts.length} options avoid any stockout${safe.length ? ": " + safe.map(label).join(", ") + "." : "."}`);
+  if (cheapest.id !== fastest.id) ins.push(`The fastest option (${label(fastest)}) costs <b>${fmt(fastest.total_cost - cheapest.total_cost)}</b> ${fastest.total_cost >= cheapest.total_cost ? "more" : "less"} than the cheapest (${label(cheapest)}) and arrives <b>${(cheapest.delay_days - fastest.delay_days).toFixed(1)} days</b> sooner.`);
+  else ins.push(`${label(cheapest)} is both the cheapest and the fastest option.`);
+  ins.push(flips === 0 ? `The top option <b>never changes</b> as the cost weight goes from 0 to 1, so the recommendation is robust.` : `The top option changes <b>${flips} time(s)</b> as the cost weight moves, so the decision depends on how the business values speed over cost.`);
+  ins.push(wr[0].id === plan[0].id ? `The LLM manager and the weighted score (at cost weight ${w.toFixed(2)}) agree on <b>${label(plan[0])}</b>.` : `The LLM manager chose <b>${label(plan[0])}</b> but the weighted score at ${w.toFixed(2)} prefers <b>${label(wr[0])}</b>, so the LLM weighed stockout risk differently.`);
+
+  $("#anOut").innerHTML = `
+  <div class="grid g4">
+    <div class="card kpi"><span class="ico">📦</span><div class="k">Days of stock</div><div class="v">${cover}</div><div class="s">${ev.goods[0]}</div></div>
+    <div class="card kpi"><span class="ico">⚠️</span><div class="k">Disruption</div><div class="v">${ev.duration_days} days</div><div class="s">${esc(ev.port || "")} ${esc(ev.region || "")}</div></div>
+    <div class="card kpi"><span class="ico">💰</span><div class="k">Cheapest</div><div class="v" style="font-size:1.2rem">${esc(nm(cheapest))}</div><div class="s">${fmt(cheapest.total_cost)}</div></div>
+    <div class="card kpi"><span class="ico">🚀</span><div class="k">Fastest</div><div class="v" style="font-size:1.2rem">${esc(nm(fastest))}</div><div class="s">${fastest.delay_days} days</div></div>
+  </div>
+  <div class="card"><h2>✨ Key takeaways</h2>${ins.map((t, i) => `<div class="insight" style="animation-delay:${i * 0.08}s"><span class="ii">${["📦", "🛡️", "⚖️", "🎚️", "🤝"][i % 5]}</span><div>${t}</div></div>`).join("")}</div>
+  <div class="grid g2">
+    <div class="card"><h2>💸 Cost breakdown: purchase vs stockout loss</h2><div class="chartbox"><canvas id="cBreak"></canvas></div></div>
+    <div class="card"><h2>⏳ Delay vs days of stock</h2><div class="chartbox"><canvas id="cDelay"></canvas></div></div>
+  </div>
+  <div class="card"><h2>🎯 Cost vs delay, with the Pareto frontier</h2><div class="chartbox" style="height:340px"><canvas id="cScatter"></canvas></div>
+    <div style="color:var(--muted);font-size:.85rem;margin-top:6px">The green dashed line joins options that no other option beats on both cost and delay. Bottom-left is better.</div></div>
+  <div class="card"><h2>🎚️ Weight sensitivity: which option wins as the cost weight changes?</h2>
+    <div class="strip">${strip.map((id, i) => `<div style="background:${col[id]}" title="cost weight ${(i / 20).toFixed(2)}: ${esc(NAME[id] || id)}"></div>`).join("")}</div>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:4px"><span>0 (only delay)</span><span>cost weight</span><span>1 (only cost)</span></div>
+    <div class="legend">${ids.map(id => `<span><i style="background:${col[id]}"></i>${esc(id + " · " + (NAME[id] || id))}</span>`).join("")}</div></div>
+  <div class="card"><h2>Ranking at cost weight ${w.toFixed(2)} (weighted score, no LLM)</h2>
+    <table><tr><th>#</th><th>Option</th><th>Total cost</th><th>Delay</th><th>Stockout</th><th>Score</th></tr>
+    ${wr.map((o, i) => `<tr><td>${i + 1}</td><td>${esc(label(o))}</td><td>${fmt(o.total_cost)}</td><td>${o.delay_days} d</td><td class="${o.stockout_days ? "bad" : "good"}">${o.stockout_days || "none"}</td><td>${o.score.toFixed(3)}</td></tr>`).join("")}</table></div>`;
+
+  const labels = plan.map(label);
+  mkChart("cBreak", {type: "bar", data: {labels, datasets: [
+    {label: "Purchase", data: plan.map(o => o.purchase_cost), backgroundColor: "#2563eb"},
+    {label: "Stockout loss", data: plan.map(o => o.stockout_cost), backgroundColor: "#dc2626"}]},
+    options: {indexAxis: "y", maintainAspectRatio: false, scales: {x: {stacked: true}, y: {stacked: true}}, plugins: {legend: {position: "bottom"}}}});
+  const coverLine = {id: "cover", afterDatasetsDraw(c) {
+    const x = c.scales.x.getPixelForValue(cover), a = c.chartArea, g = c.ctx; g.save(); g.strokeStyle = "#dc2626"; g.setLineDash([6, 4]); g.lineWidth = 2;
+    g.beginPath(); g.moveTo(x, a.top); g.lineTo(x, a.bottom); g.stroke(); g.setLineDash([]); g.fillStyle = "#dc2626"; g.font = "12px Segoe UI"; g.fillText("stock " + cover + "d", x + 4, a.top + 12); g.restore(); }};
+  mkChart("cDelay", {type: "bar", data: {labels, datasets: [{label: "Delay (days)", data: plan.map(o => o.delay_days), backgroundColor: plan.map(o => o.delay_days > cover ? "#f87171" : "#2563eb")}]},
+    options: {indexAxis: "y", maintainAspectRatio: false, plugins: {legend: {display: false}}}, plugins: [coverLine]});
+  const fr = pareto(opts);
+  mkChart("cScatter", {type: "scatter", data: {datasets: [
+    {label: "Pareto frontier", type: "line", data: fr.map(o => ({x: o.delay_days, y: o.total_cost})), borderColor: "#16a34a", borderDash: [6, 4], pointRadius: 0, order: 2},
+    ...plan.map(o => ({label: label(o) + " (rank " + o.rank + ")", data: [{x: o.delay_days, y: o.total_cost}], backgroundColor: col[o.id], pointRadius: 9 + (plan.length - o.rank), order: 1}))]},
+    options: {maintainAspectRatio: false, scales: {x: {title: {display: true, text: "Delay (days)"}}, y: {title: {display: true, text: "Total cost"}}}, plugins: {legend: {position: "bottom"}}}});
+}
+
+// ---------- evaluation ----------
+$("#evalBtn").onclick = async () => {
+  $("#evalErr").innerHTML = ""; $("#evalBtn").disabled = true; const pg = $("#evalprog"); pg.style.display = "block"; pg.firstChild.style.width = "0";
+  try {
+    await stream("/api/evaluate", {}, m => {
+      if (m.error) throw new Error(m.error);
+      if (m.progress) { pg.firstChild.style.width = (m.progress / m.total * 100) + "%"; $("#evalmeta").textContent = `${m.progress}/${m.total} done`; }
+      if (m.results) { renderEval(m.results, false); $("#evalmeta").textContent = "finished"; }
+    });
+  } catch (e) { $("#evalErr").innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+  pg.style.display = "none"; $("#evalBtn").disabled = !STATUS.has_key;
+};
+let EVALRES = null, EVALSAVED = false;
+function renderEval(res, saved) {
+  EVALRES = res; EVALSAVED = saved;
+  const ok = res.filter(r => !r.error), lh = ok.filter(r => r.llm_top === r.expected).length, rh = ok.filter(r => r.rules_top === r.expected).length, n = res.length;
+  const avg = res.reduce((a, r) => a + r.secs, 0) / n;
+  $("#evalOut").innerHTML = `${saved ? `<div class="warn">Showing the last saved evaluation.</div>` : ""}
+  <div class="grid g4">
+    <div class="card kpi"><span class="ico">🤖</span><div class="k">LLM manager top-1</div><div class="v">${lh}/${n}</div><div class="s">${Math.round(lh / n * 100)}%</div></div>
+    <div class="card kpi"><span class="ico">📏</span><div class="k">Weighted-score baseline</div><div class="v">${rh}/${n}</div><div class="s">${Math.round(rh / n * 100)}%</div></div>
+    <div class="card kpi"><span class="ico">🛠️</span><div class="k">Errored runs</div><div class="v">${n - ok.length}</div><div class="s">network or tool errors</div></div>
+    <div class="card kpi"><span class="ico">⏱️</span><div class="k">Avg time / scenario</div><div class="v">${avg.toFixed(0)}s</div></div></div>
+  <div class="grid g2"><div class="card"><h2>📈 Accuracy</h2><div class="chartbox" style="height:240px"><canvas id="cAcc"></canvas></div></div>
+  <div class="card"><h2>🧾 Results</h2><table><tr><th>ID</th><th>Expected</th><th>LLM</th><th>Rules</th><th>Result</th></tr>
+  ${res.map(r => r.error ? `<tr><td>${r.id}</td><td>${r.expected}</td><td colspan="2">error</td><td><span class="tag er">error</span></td></tr>` :
+    `<tr><td>${r.id}</td><td>${r.expected}</td><td>${r.llm_top}</td><td>${r.rules_top}</td><td><span class="tag ${r.llm_top === r.expected ? "ok" : "no"}">${r.llm_top === r.expected ? "match" : "miss"}</span></td></tr>`).join("")}</table></div></div>
+  <div class="card"><h2>🔬 Scenario details</h2>${res.map(r => `<details><summary>${r.id} · ${esc(r.event)}</summary>
+    ${r.error ? `<div class="err">${esc(r.error)}</div>` : `<p>Expected <b>${r.expected}</b>, LLM chose <b>${r.llm_top}</b> (ranking source: ${r.source}).</p>
+    <table><tr><th>#</th><th>Option</th><th>Cost</th><th>Delay</th><th>Reason</th></tr>${r.plan.map(o => `<tr><td>${o.rank}</td><td>${esc(o.label)}</td><td>${fmt(o.total_cost)}</td><td>${o.delay_days}</td><td>${cleanReason(o.reason)}</td></tr>`).join("")}</table>`}</details>`).join("")}</div>
+  <p style="color:var(--muted);font-size:.85rem">Known-best labels were set by the team: the cheapest option with no stockout, or the least stockout if none avoids it.</p>`;
+  mkChart("cAcc", {type: "bar", data: {labels: ["LLM manager", "Weighted-score baseline"], datasets: [{data: [lh / n * 100, rh / n * 100], backgroundColor: ["#2563eb", "#94a3b8"]}]},
+    options: {maintainAspectRatio: false, scales: {y: {min: 0, max: 100, ticks: {callback: v => v + "%"}}}, plugins: {legend: {display: false}}}});
+}
+
+// ---------- catalogue ----------
+let dataDone = false;
+function renderData() {
+  if (!DATA || dataDone) return; dataDone = true;
+  const goods = [...new Set(DATA.suppliers.flatMap(s => s.goods))];
+  mkChart("cLead", {type: "scatter", data: {datasets: goods.map((g, i) => ({label: g, backgroundColor: COLORS[i], pointRadius: 8,
+    data: DATA.suppliers.filter(s => s.goods.includes(g)).map(s => ({x: s.lead_days, y: s.unit_cost, name: s.name}))}))},
+    options: {maintainAspectRatio: false, scales: {x: {title: {display: true, text: "Lead time (days)"}}, y: {type: "logarithmic", title: {display: true, text: "Unit cost (log)"}}},
+      plugins: {legend: {position: "bottom"}, tooltip: {callbacks: {label: c => `${c.raw.name}: ${c.raw.x}d, ${c.raw.y}`}}}}});
+  mkChart("cCover", {type: "bar", data: {labels: goods, datasets: [{label: "Days of cover", data: goods.map(g => DATA.inventory[g].days_of_cover), backgroundColor: "#2563eb"}]},
+    options: {maintainAspectRatio: false, plugins: {legend: {display: false}}}});
+  $("#supTable").innerHTML = `<table><tr><th>ID</th><th>Name</th><th>Region</th><th>Port</th><th>Goods</th><th>Unit cost</th><th>Lead (d)</th><th>Capacity</th><th>Reliability</th></tr>
+    ${DATA.suppliers.map(s => `<tr><td>${s.id}</td><td>${esc(s.name)}</td><td>${s.region}</td><td>${s.port}</td><td>${s.goods.join(", ")}</td><td>${s.unit_cost}</td><td>${s.lead_days}</td><td>${fmt(s.capacity)}</td><td>${s.reliability}</td></tr>`).join("")}</table>`;
+}
+
+// ---------- blackboard ----------
+function renderBB() {
+  const j = o => `<pre>${esc(JSON.stringify(o, null, 2))}</pre>`;
+  $("#bbOut").innerHTML = `<div class="card"><h2>🧵 Write trail</h2>${R.log.map(([a, k], i) => `<span class="step ${k === "ranked_plan" ? "w" : ""}">${i + 1}. ${a} → ${k}</span>`).join("")}</div>
+  <div class="grid g2"><div class="card"><h2>Structured event (Event Interpreter)</h2>${j(R.event)}<h2>Stock (Inventory tool)</h2>${j(R.stock)}<h2>Inventory agent note</h2><p>${esc(R.inventory_note)}</p></div>
+  <div class="card"><h2>Shortlist (Supplier Alternatives)</h2><p><b>${esc((R.shortlist || []).join(", "))}</b><br>${esc(R.shortlist_why)}</p>
+  <h2>Retrieved from catalogue (RAG)</h2>${j(Object.values(R.retrieved || {}).map(h => ({id: h.id, name: h.name, region: h.region, lead_days: h.lead_days, unit_cost: h.unit_cost, rag_score: h.rag_score})))}
+  <h2>Trade-off agent note</h2><p>${esc(R.tradeoff_note)}</p></div></div>
+  <details><summary>Options computed by the cost-delay tool</summary>${j(R.options)}</details>`;
+}
+init();
+</script>
+</body>
+</html>

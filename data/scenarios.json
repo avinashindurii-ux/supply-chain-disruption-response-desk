@@ -1,0 +1,42 @@
+[
+ {
+  "id": "SC1",
+  "event": "Port strike at Shanghai disrupts lithium cells shipments from China for 21 days",
+  "expected_best": "S03"
+ },
+ {
+  "id": "SC2",
+  "event": "Typhoon closes Kaohsiung in Taiwan; microcontrollers delayed for 14 days",
+  "expected_best": "S06"
+ },
+ {
+  "id": "SC3",
+  "event": "Mundra port congestion in India halts cotton fabric exports for 10 days",
+  "expected_best": "WAIT"
+ },
+ {
+  "id": "SC4",
+  "event": "Kolkata port flood in India stops steel coil shipments for 25 days",
+  "expected_best": "S11"
+ },
+ {
+  "id": "SC5",
+  "event": "Labour strike at Shanghai port in China hits lithium cells for 40 days",
+  "expected_best": "S03"
+ },
+ {
+  "id": "SC6",
+  "event": "Kaohsiung blockade in Taiwan, microcontrollers shortage for 45 days",
+  "expected_best": "S06"
+ },
+ {
+  "id": "SC7",
+  "event": "Customs shutdown at Mundra in India blocks cotton fabric for 30 days",
+  "expected_best": "S10"
+ },
+ {
+  "id": "SC8",
+  "event": "Minor 5 day delay at Shanghai port in China affecting lithium cells",
+  "expected_best": "WAIT"
+ }
+]
